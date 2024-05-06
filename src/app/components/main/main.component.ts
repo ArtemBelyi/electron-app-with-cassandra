@@ -11,7 +11,11 @@ import { CassandraService } from "../../services/cassandra/cassandra.service";
 export class MainComponent {
   constructor(readonly cassandraService: CassandraService) {}
 
-  getTestConnection(): void {
+  testConnection(): void {
     this.cassandraService.testConnection().then(res => console.log(res))
+  }
+
+  createKeyspace(): void {
+    this.cassandraService.createKeyspace("new_keyspace_belyi_1").then(res => console.log(res))
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Client } from "cassandra-driver";
+import { Client, types } from "cassandra-driver";
+import ResultSet = types.ResultSet;
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,27 @@ export class CassandraService {
     const authProvider = new this.cassandra.auth.PlainTextAuthProvider('token', process.env['ASTRA_DB_APPLICATION_TOKEN']);
     const cloud =  { secureConnectBundle: "src/app/services/cassandra/credentials/secure-connect-db-app-1.zip" };
     return new this.cassandra.Client({cloud, authProvider});
+  }
+
+  async createKeyspace(name: string): Promise<ResultSet> {
+    const cqlQuery = `CREATE KEYSPACE ${name}
+    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };`
+    let res = await this.execute(cqlQuery);
+
+    try {
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async execute(cql: string): Promise<ResultSet> {
+    const client = this.createClient();
+
+    try {
+      return client.execute(cql);
+    } catch (error) {
+      throw error;
+    }
   }
 }
