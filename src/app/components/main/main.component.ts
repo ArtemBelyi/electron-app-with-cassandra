@@ -18,4 +18,8 @@ export class MainComponent {
   createKeyspace(): void {
     this.cassandraService.createKeyspace("new_keyspace_belyi_1").then(res => console.log(res))
   }
+
+  createTable(): void {
+    this.cassandraService.createTable("abelyi_2", "Table_race_2").then(res => console.log(res))
+  }
 }

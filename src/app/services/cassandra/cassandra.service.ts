@@ -32,7 +32,23 @@ export class CassandraService {
   async createKeyspace(name: string): Promise<ResultSet> {
     const cqlQuery = `CREATE KEYSPACE ${name}
     WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };`
-    let res = await this.execute(cqlQuery);
+    const res = await this.execute(cqlQuery);
+
+    try {
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createTable(keyspaceName: string, tableName: string): Promise<ResultSet> {
+    const cqlQuery = `CREATE TABLE ${keyspaceName}.${tableName} (
+        category text,
+        points int,
+        id UUID,
+        lastname text,
+        PRIMARY KEY (category, points))`;
+    const res = await this.execute(cqlQuery);
 
     try {
       return res;
