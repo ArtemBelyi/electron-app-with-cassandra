@@ -57,13 +57,38 @@ export class CassandraService {
     }
   }
 
-  async execute(cql: string): Promise<ResultSet> {
-    const client = this.createClient();
+  async getTableNamesFromKeyspace(keyspaceName: string): Promise<ResultSet> {
+    const query = "SELECT * FROM system_schema.tables WHERE keyspace_name = ?";
+    const res = await this.execute(query, [keyspaceName]);
 
     try {
-      return client.execute(cql);
+      return res;
     } catch (error) {
       throw error;
     }
+  }
+
+
+  async getColumnsForTable(keyspaceName: string, tableName: string): Promise<string[]> {
+    const client = this.createClient();
+
+    try {
+      await client.connect();
+      const tableMetadata = await client.metadata.getTable(keyspaceName, tableName);
+
+      if (!tableMetadata) {
+        throw new Error(`Table ${tableName} does not exist in keyspace ${keyspaceName}`);
+      }
+
+      return tableMetadata.columns.map(column => column.name);
+    } finally {
+      await client.shutdown();
+    }
+  }
+
+
+  async execute(cql: string, params: any[] = []): Promise<ResultSet> {
+    const client = this.createClient();
+    return client.execute(cql, params, { prepare: true });
   }
 }

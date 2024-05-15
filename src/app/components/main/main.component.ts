@@ -22,4 +22,12 @@ export class MainComponent {
   createTable(): void {
     this.cassandraService.createTable("abelyi_2", "Table_race_2").then(res => console.log(res))
   }
+
+  getTablesName(): void {
+    this.cassandraService.getTableNamesFromKeyspace("abelyi_2").then(res => console.log(res))
+  }
+
+  getColumnFromTable(): void {
+    this.cassandraService.getColumnsForTable("abelyi_2", "table_race_2").then(res => console.log(res))
+  }
 }
