@@ -24,7 +24,7 @@ export class CassandraService {
   }
 
   private createClient(): Client {
-    const authProvider = new this.cassandra.auth.PlainTextAuthProvider('token', process.env['ASTRA_DB_APPLICATION_TOKEN']);
+    const authProvider = new this.cassandra.auth.PlainTextAuthProvider('token', process.env['ASTRA_DB_APPLICATION_TOKEN_1']);
     const cloud =  { secureConnectBundle: "src/app/services/cassandra/credentials/secure-connect-db-app-1.zip" };
     return new this.cassandra.Client({cloud, authProvider});
   }
